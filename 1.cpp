@@ -133,15 +133,11 @@ void SJF_pre_emptive()
         if(!idle)
         {
             turnaround[executing]++;
-            if(burstTimes[executing]--)
-            {
-                cout<<"Process "<<executing<<" is executing from time "<<time-1<<" to "<<time<<endl;
-            }
-            else
+            cout<<"Process "<<executing<<" is executing from time "<<time-1<<" to "<<time<<endl;
+            if(!--burstTimes[executing])
             {
                 waitingTime[executing] = time-turnaround[executing]-arrivalTimes[executing];
-            }
-            
+            }  
             burstTimeLeft--;   
         }
         else
@@ -190,14 +186,11 @@ void SFJ_non_pre_emptive()
         if(!idle)
         {
             turnaround[executing]++;
-            if(burstTimes[executing]--)
-            {
-                cout<<"Process "<<executing<<" is executing from time "<<time-1<<" to "<<time<<endl;
-            }
-            else
+            cout<<"Process "<<executing<<" is executing from time "<<time-1<<" to "<<time<<endl;
+            if(!--burstTimes[executing])
             {
                 waitingTime[executing] = time-turnaround[executing]-arrivalTimes[executing];
-            }
+            }  
             
             burstTimeLeft--;   
         }
@@ -275,7 +268,6 @@ void RoundRobin()
                     topProcess=-1;
                     idle=true;
                 }
-
             }
             burstTimeLeft--;
         }
