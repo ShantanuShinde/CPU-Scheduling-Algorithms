@@ -7,7 +7,7 @@ using namespace std;
 
 void getDataFromFile(int *&arrivalTimes,int *&burstTimes,int *totalBurstTime,int *no_processes)
 {
-    ifstream processFile("processes.txt");
+    ifstream processFile("processes1.txt");
     int n = 0,b=0;
     while(!processFile.eof()){
         string temp;
