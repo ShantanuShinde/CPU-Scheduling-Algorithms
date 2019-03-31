@@ -7,7 +7,7 @@ using namespace std;
 
 void getDataFromFile(int *&arrivalTimes,int *&burstTimes,int *totalBurstTime,int *no_processes)
 {
-    ifstream processFile("processes1.txt");
+    ifstream processFile("processes.txt");
     int n = 0,b=0;
     while(!processFile.eof()){
         string temp;
@@ -24,7 +24,7 @@ void getDataFromFile(int *&arrivalTimes,int *&burstTimes,int *totalBurstTime,int
     for(int i=0;i<n;i++)
     {
         char temp;
-       
+        //cout<<temp<<endl;
         processFile>>temp;
         processFile>>temp;
         processFile>>temp;
@@ -32,11 +32,12 @@ void getDataFromFile(int *&arrivalTimes,int *&burstTimes,int *totalBurstTime,int
         processFile>>temp;
         processFile>>burstTimes[i];
         processFile>>temp;
-    
+        //processFile>>temp;cout<<temp<<endl;
         b+=burstTimes[i];
     }
     *totalBurstTime = b;
-    
+    //cout<<"file read complete"<<endl;
+}
 
 void FCFS()
 {
@@ -49,7 +50,7 @@ void FCFS()
     int time=0,topProcess,burstTimeLeft = totalBurstTime;
     bool idle=true;
     waitingTime[0] = 0;
-    while(!FIFO->isEmpty()||idle||burstTimesLeft[topProcess])
+    while(burstTimeLeft)
     {
         for(int i=0;i<no_processes;i++)
         {
@@ -73,6 +74,7 @@ void FCFS()
             if(!--burstTimesLeft[topProcess])
             {
                 turnaround[topProcess] = time - arrivalTimes[topProcess];
+                waitingTime[topProcess] = time-burstTimes[topProcess]-arrivalTimes[topProcess];
                 if(!FIFO->isEmpty())
                 {
                     topProcess = FIFO->dequeue();
@@ -90,13 +92,9 @@ void FCFS()
         {
             cout<<"The cpu is idle for time "<<time<<endl;
         }
-        if(!burstTimeLeft)
-            idle=false;
+        
     }
-    for(int i=1;i<no_processes;i++)
-    {
-        waitingTime[i] = waitingTime[i-1] + burstTimes[i-1];
-    }
+    
     for(int i=0;i<no_processes;i++)
     {
         cout<<"Process "<<i<<": Turnaround = "<<turnaround[i]<<" Waiting time = "<<waitingTime[i]<<" Penalty ratio = "<<(float)turnaround[i]/burstTimes[i]<<endl;
@@ -134,9 +132,10 @@ void SJF_pre_emptive()
         {
             burstTimes[executing]++;
             cout<<"Process "<<executing<<" is executing from time "<<time-1<<" to "<<time<<endl;
-            if(!--burstTimes[executing])
+            if(!--burstTimesLeft[executing])
             {
                 turnaround[executing] = time-arrivalTimes[executing];
+                //cout<<executing<<" "<<time<<endl;
                 waitingTime[executing] = time-burstTimes[executing]-arrivalTimes[executing];
             }  
             burstTimeLeft--;   
@@ -191,7 +190,8 @@ void SFJ_non_pre_emptive()
             if(!--burstTimesLeft[executing])
             {
                 turnaround[executing] = time - arrivalTimes[executing];
-                waitingTime[executing] = time-burstTimesLeft[executing]-arrivalTimes[executing];
+                waitingTime[executing] = time-burstTimes[executing]-arrivalTimes[executing];
+                //cout<<burstTimes[executing]<<" "<<arrivalTimes[executing]<<endl;
             }  
             
             burstTimeLeft--;   
